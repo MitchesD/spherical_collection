@@ -114,6 +114,60 @@ Float renka_f5(Float const theta, Float const phi)
         (std::pow(x - 0.5f, 2.0f) + std::pow(y - 0.5f, 2.0f) + std::pow(z - 0.5f, 2.0f))) / 3.0f;
 }
 
+// From: "Numerical Quadrature over the Surface of a Sphere"
+template<typename Float>
+Float reegar_f3(Float const theta, Float const phi)
+{
+    auto [x, y, z] = spherical_to_xyz(theta, phi);
+    return (F_PI_2 + std::atan(300.0f * (z - 9999.0f / 10000.0f))) / F_PI;
+}
+
+// From: "Spherical Harmonics Collocation: A Computational Intercomparison of Several Grids"
+template<typename Float>
+Float bellet_f4(Float const theta, Float const phi)
+{
+    auto [x, y, z] = spherical_to_xyz(theta, phi);
+    return 0.5f * (1.0f + (Float)sgn(x - 0.5f));
+}
+
+// From: "Numerical quadrature over smooth surfaces with boundaries"
+template<typename Float>
+Float reegar_f2(Float const theta, Float const phi)
+{
+    auto [x, y, z] = spherical_to_xyz(theta, phi);
+    return 2.0f / F_PI * std::atan(z);
+}
+
+// From: "Numerical quadrature over smooth surfaces with boundaries"
+template<typename Float>
+Float reegar_f4(Float const theta, Float const phi)
+{
+    auto [x, y, z] = spherical_to_xyz(theta, phi);
+    return 0.5f + std::atan(1000.0f * (z - 9999.0f / (10000.0f * 2.0f * std::sqrt(2)))) / F_PI;
+}
+
+template<typename Float>
+Float franke(Float const theta, Float const phi)
+{
+    auto [x, y, z] = spherical_to_xyz(theta, phi);
+    return 0.75f * std::exp(-(9.0f * x - 2.0f) * (9.0f * x - 2.0f) / 4.0f -
+                (9.0f * y - 2.0f) * (9.0f * y - 2.0f) / 4.0f -
+                (9.0f * z - 2.0f) * (9.0f * z - 2.0f) / 4.0f) +
+            0.75f * std::exp(-(9.0f * x + 1.0f) * (9.0f * x + 1.0f) / 49.0f -
+                (9.0f * y + 1.0f) / 10.0f -
+                (9.0f * z + 1.0f) / 10.0f) +
+            0.5f * std::exp(-(9.0f * x - 7.0f) * (9.0f * x - 7.0f) / 4.0f -
+                (9.0f * y - 3.0f) * (9.0f * y - 3.0f) / 4.0f -
+                (9.0f * z - 5.0f) * (9.0f * z - 5.0f) / 4.0f) -
+            0.2f * std::exp(-(9.0f * x - 4.0f) * (9.0f * x - 4.0f) -
+                (9.0f * y - 7.0f) * (9.0f * y - 7.0f) -
+                (9.0f * z - 5.0f) * (9.0f * z - 5.0f));
+}
+
+/**
+ * Custom designed functions - partially present in Vlnas2025 et al.
+ */
+
 template<typename Float>
 Float cf_f1(Float const theta, Float const phi)
 {
@@ -195,24 +249,6 @@ Float cf_f10(Float const theta, Float const phi)
 }
 
 template<typename Float>
-Float franke(Float const theta, Float const phi)
-{
-    auto [x, y, z] = spherical_to_xyz(theta, phi);
-    return 0.75f * std::exp(-(9.0f * x - 2.0f) * (9.0f * x - 2.0f) / 4.0f -
-                (9.0f * y - 2.0f) * (9.0f * y - 2.0f) / 4.0f -
-                (9.0f * z - 2.0f) * (9.0f * z - 2.0f) / 4.0f) +
-            0.75f * std::exp(-(9.0f * x + 1.0f) * (9.0f * x + 1.0f) / 49.0f -
-                (9.0f * y + 1.0f) / 10.0f -
-                (9.0f * z + 1.0f) / 10.0f) +
-            0.5f * std::exp(-(9.0f * x - 7.0f) * (9.0f * x - 7.0f) / 4.0f -
-                (9.0f * y - 3.0f) * (9.0f * y - 3.0f) / 4.0f -
-                (9.0f * z - 5.0f) * (9.0f * z - 5.0f) / 4.0f) -
-            0.2f * std::exp(-(9.0f * x - 4.0f) * (9.0f * x - 4.0f) -
-                (9.0f * y - 7.0f) * (9.0f * y - 7.0f) -
-                (9.0f * z - 5.0f) * (9.0f * z - 5.0f));
-}
-
-template<typename Float>
 Float cf_f11(Float const theta, Float const phi)
 {
     auto [x, y, z] = spherical_to_xyz(theta, phi);
@@ -228,36 +264,25 @@ Float cf_f12(Float const theta, Float const phi)
     return std::sin(10.0f * x) + std::cos(12.0f * y) - std::sin(15.0f * z) + 0.2f * std::cos(18.0f * x) + 3.0f;
 }
 
-// From: "Numerical Quadrature over the Surface of a Sphere"
 template<typename Float>
-Float reegar_f3(Float const theta, Float const phi)
+Float cf_f13(Float const theta, Float const phi)
 {
     auto [x, y, z] = spherical_to_xyz(theta, phi);
-    return (F_PI_2 + std::atan(300.0f * (z - 9999.0f / 10000.0f))) / F_PI;
+    return std::exp(-std::sin(5.0f * x) - std::cos(6.0f * y)) + 0.3f * std::sin(10.0f * z);
 }
 
-// From: "Spherical Harmonics Collocation: A Computational Intercomparison of Several Grids"
 template<typename Float>
-Float bellet_f4(Float const theta, Float const phi)
+Float cf_f14(Float const theta, Float const phi)
 {
     auto [x, y, z] = spherical_to_xyz(theta, phi);
-    return 0.5f * (1.0f + (Float)sgn(x - 0.5f));
+    return std::exp(-2.0f * (x * x + y * y)) * std::sin(4.0f * z);
 }
 
-// From: "Numerical quadrature over smooth surfaces with boundaries"
 template<typename Float>
-Float reegar_f2(Float const theta, Float const phi)
+Float cf_15(Float const theta, Float const phi)
 {
     auto [x, y, z] = spherical_to_xyz(theta, phi);
-    return 2.0f / F_PI * std::atan(z);
-}
-
-// From: "Numerical quadrature over smooth surfaces with boundaries"
-template<typename Float>
-Float reegar_f4(Float const theta, Float const phi)
-{
-    auto [x, y, z] = spherical_to_xyz(theta, phi);
-    return 0.5f + std::atan(1000.0f * (z - 9999.0f / (10000.0f * 2.0f * std::sqrt(2)))) / F_PI;
+    return (x * x + y * y) * std::exp(-3.0f * z * z);
 }
 
 } // namespace sphc
