@@ -1,7 +1,7 @@
 /**
  * A collection of spherical functions
  *
- * Copyright (c) 2025, Michal Vlnas
+ * Copyright (c) 2025-2026, Michal Vlnas
  */
 
 #ifndef SPHERICAL_COLLECTION_FUNCTIONS_H
