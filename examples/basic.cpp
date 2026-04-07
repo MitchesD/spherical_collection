@@ -9,14 +9,17 @@
 
 int main()
 {
-    auto val1 = sphc::cf_f1<float>(0.23f, 0.42f);
+    auto const val1 = sphc::zsymnetric::z1<float>(0.23f, 0.42f);
     std::cout << val1 << std::endl;
 
-    auto val2 = sphc::fornberg_f1(0.2, 0.1);
+    auto const val2 = sphc::absolute_values::a1<float>(0.2, 0.1);
     std::cout << val2 << std::endl;
 
-    auto val3 = sphc::beentjes_f4<double>(0.5, 1.0);
+    auto const val3 = sphc::oscillatory::o5<double>(0.5, 1.0);
     std::cout << val3 << std::endl;
+
+    auto const val4 = sphc::eval_function("l1", 0.123, 0.345);
+    std::cout << val4 << std::endl;
 
     return 0;
 }
