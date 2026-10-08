@@ -21,5 +21,8 @@ int main()
     auto const val4 = sphc::eval_function("l1", 0.123, 0.345);
     std::cout << val4 << std::endl;
 
+    std::cout << std::to_string(sphc::is_valid_id("a20")) << std::endl;
+    std::cout << std::to_string(sphc::is_valid_id("a1")) << std::endl;
+
     return 0;
 }

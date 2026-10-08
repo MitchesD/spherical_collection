@@ -11,6 +11,7 @@
 #include <cmath>
 #include <functional>
 #include <unordered_map>
+#include <ranges>
 
 namespace sphc
 {
@@ -454,6 +455,28 @@ Float get_maximum(std::string const& id)
 
     return static_cast<Float>(maximums.at(id));
 }
+
+inline bool is_valid_id(std::string const& id)
+{
+    static std::vector<std::string> valid_functions =
+    {
+        "p1", "d1", "d2", "d3", "d4", "s1", "s2", "s3", "o1", "o2",
+        "o3", "o4", "o5", "o6", "o7", "l1", "l2", "l3", "a1", "a2",
+        "a3", "a4", "a5", "a6", "z1", "z2", "z3"
+    };
+
+    return std::ranges::find(valid_functions, id) != valid_functions.end();
+}
+
+inline std::vector<std::string> get_all_function_ids()
+{
+    return {
+        "p1", "d1", "d2", "d3", "d4", "s1", "s2", "s3", "o1", "o2",
+        "o3", "o4", "o5", "o6", "o7", "l1", "l2", "l3", "a1", "a2",
+        "a3", "a4", "a5", "a6", "z1", "z2", "z3",
+    };
+}
+
 
 } // namespace sphc
 
